@@ -1,51 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import bookList from '../../assets/bookData'; // Import the initialItems array
 import { Layout, Icon, Input } from '@ui-kitten/components';
+import bookList from '../../assets/bookData'; // Import the initialItems array
 
 const SearchIcon = (props) => (
   <Icon {...props} name='search-outline' />
 );
 
-const getItem = (item) => {
-  // Function for click on an item
-  alert('Id : ' + item.id + ' Title : ' + item.title);
-};
+const SearchScreen = ({ route, navigation }) => {
 
-const renderItem = ({ item }) => (
-  <TouchableOpacity style={styles.itemContainer} onPress={() => getItem(item)}>
-    <Image
-      source={item.imagePath}
-      style={styles.itemImage}
-    />
-    <View style={styles.itemInfo}>
-      <Text style={styles.itemText}>{item.id}</Text>
-      <Text style={styles.itemText}>{item.title}</Text>
-    </View>
-  </TouchableOpacity>
-);
-
-const SearchScreen = ({ navigation }) => {
-
+  const { query } = route.params; // Get the query from the route params
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredItems, setFilteredItems] = useState(bookList); // item list
 
-  const goHome = () => {
-    navigation.navigate('Home');
+  const goBack = () => {
+    navigation.goBack();
   };
+
+  const getItem = (item) => {
+    // Function for click on an item
+    navigation.navigate('BookDetailScreen', { bookDetail: item });
+  };
+
+  useEffect(() => {
+    // Call the handleSearch function when the component mounts
+    handleSearch(query);
+  }, [query]);
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity style={styles.itemContainer} onPress={() => getItem(item)}>
+      <Image
+        source={item.imagePath}
+        style={styles.itemImage}
+      />
+      <View style={styles.itemInfo}>
+        <Text style={styles.itemText}>{item.id}</Text>
+        <Text style={styles.itemText}>{item.title}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   const handleSearch = (userInput) => {
     setSearchQuery(userInput);
+
     const filtered = bookList.filter(item =>
       item.title.toLowerCase().includes(userInput.toLowerCase())
     );
+
     setFilteredItems(filtered);
   };
 
   return (
     <Layout style={styles.container}>
       <View style={styles.searchBar}>
-        <TouchableOpacity onPress={goHome}>
+        <TouchableOpacity onPress={goBack}>
           <Icon
             name='chevron-left-outline'
             style={{ width: 40, height: 50 }}
@@ -94,10 +102,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 
-  flatList: {    
+  flatList: {
     margin: 10,
     padding: 10,
-    backgroundColor: 'white',    
+    backgroundColor: 'white',
     borderRadius: 20,
   },
 
