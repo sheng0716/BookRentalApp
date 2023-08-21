@@ -65,6 +65,16 @@ const BookDetailScreen = ({ route, navigation }) => {
                         {/* Add more book data fields as needed */}
                     </View>
                 </View>
+
+                <View style={{ ...styles.itemContainer, flexDirection: 'column' }}>
+                    <Text style={styles.itemText}>Abstract</Text>
+                    <Text style={styles.itemText}>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur dapibus orci
+                        eu nisl egestas, in euismod nisi viverra. Fusce in velit id libero venenatis
+                        vehicula. Fusce varius dui a purus euismod euismod. Maecenas eget malesuada arcu.
+                        Proin non ultrices metus. Vestibulum id libero non est tincidunt finibus.
+                    </Text>
+                </View>
             </ScrollView>
 
             <View style={styles.bottomButtons}>
@@ -105,8 +115,11 @@ const styles = StyleSheet.create({
 
     itemContainer: {
         margin: 10,
+        padding: 20,
         flexDirection: 'row',
         alignItems: 'center',
+        backgroundColor: 'white',
+        borderRadius: 10,
     },
 
     itemInfo: {
@@ -120,6 +133,7 @@ const styles = StyleSheet.create({
     },
 
     itemText: {
+        fontSize: 20,
         marginTop: 5,
     },
 
