@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { Layout, Icon, Button } from '@ui-kitten/components';
+import { Layout, Icon, Button, Modal } from '@ui-kitten/components';
 
 const BookDetailScreen = ({ route, navigation }) => {
 
     const { bookDetail } = route.params; // Get the book data from the route params
+    const [isBookDetailModalVisible, setIsBookDetailModalVisible] = useState(false);
 
     const goBack = () => {
         navigation.goBack();
@@ -28,7 +29,7 @@ const BookDetailScreen = ({ route, navigation }) => {
 
     return (
         <Layout style={styles.container}>
-            <ScrollView>
+            <ScrollView style={{ flex: 1 }}>
                 <View style={styles.topBar}>
                     <TouchableOpacity onPress={goBack}>
                         <Icon
@@ -54,20 +55,21 @@ const BookDetailScreen = ({ route, navigation }) => {
                     </View>
                 </View>
 
-                <View style={styles.itemContainer}>
+                <TouchableOpacity style={styles.itemContainer} onPress={() => setIsBookDetailModalVisible(true)}>
                     <Image
-                        source={bookDetail.imagePath} // Display the book image
+                        source={bookDetail.image_path} // Display the book image
                         style={styles.itemImage}
                     />
                     <View style={styles.itemInfo}>
-                        <Text style={styles.itemText}>{bookDetail.id}</Text>
-                        <Text style={styles.itemText}>{bookDetail.title}</Text>
-                        {/* Add more book data fields as needed */}
+                        <Text style={{ ...styles.itemText, fontWeight: 'bold' }}>{bookDetail.title}</Text>
+                        <Text style={styles.itemText}>{bookDetail.author}</Text>
+                        <Text style={styles.itemText} ellipsizeMode="tail" numberOfLines={1}>{bookDetail.isbn}</Text>
+                        <Text style={styles.itemText} ellipsizeMode="tail" numberOfLines={1}>{bookDetail.publisher}</Text>
                     </View>
-                </View>
+                </TouchableOpacity>
 
                 <View style={{ ...styles.itemContainer, flexDirection: 'column' }}>
-                    <Text style={styles.itemText}>Abstract</Text>
+                    <Text style={{ ...styles.itemText, fontWeight: 'bold' }}>Abstract</Text>
                     <Text style={styles.itemText}>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur dapibus orci
                         eu nisl egestas, in euismod nisi viverra. Fusce in velit id libero venenatis
@@ -90,6 +92,37 @@ const BookDetailScreen = ({ route, navigation }) => {
                     Read
                 </Button>
             </View>
+
+            {/* Modal */}
+            <Modal
+                visible={isBookDetailModalVisible}
+                backdropStyle={styles.modalBackdrop}
+                onBackdropPress={() => setIsBookDetailModalVisible(false)}>
+                {/* Modal content goes here */}
+                <View style={styles.modalContainer}>
+                    <Image
+                        source={bookDetail.image_path} // Display the book image
+                        style={{
+                            width: 100,
+                            height: 150,
+                            borderRadius: 5,
+                        }}
+                    />
+
+                    <Text style={styles.itemTextLabel}>Book Detail</Text>
+                    <Text style={styles.itemTextLabel}>Title:</Text>
+                    <Text style={styles.itemText}>{bookDetail.title}</Text>
+
+                    <Text style={styles.itemTextLabel}>Author:</Text>
+                    <Text style={styles.itemText}>{bookDetail.author}</Text>
+
+                    <Text style={styles.itemTextLabel}>Publisher:</Text>
+                    <Text style={styles.itemText}>{bookDetail.publisher}</Text>
+
+                    <Text style={styles.itemTextLabel}>ISBN:</Text>
+                    <Text style={styles.itemText}>{bookDetail.isbn}</Text>
+                </View>
+            </Modal>
         </Layout>
     );
 };
@@ -127,21 +160,46 @@ const styles = StyleSheet.create({
     },
 
     itemImage: {
-        width: 80,
-        height: 120,
+        width: 100,
+        height: 150,
         borderRadius: 5,
     },
 
     itemText: {
         fontSize: 20,
-        marginTop: 5,
+        marginTop: 10,
+        maxWidth: '90%',
+    },
+
+    itemTextLabel: {
+        fontSize: 20,
+        marginTop: 30,
+        maxWidth: '90%',
+        fontWeight: 'bold',
     },
 
     bottomButtons: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        marginVertical: 20,
+        backgroundColor: 'white',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        paddingVertical: 20,
+    },
+
+    modalBackdrop: {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+
+    modalContainer: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
     },
 });
 

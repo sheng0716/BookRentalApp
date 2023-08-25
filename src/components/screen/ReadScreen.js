@@ -18,35 +18,22 @@ const ReadScreen = ({ route, navigation }) => {
                         style={{ width: 40, height: 50 }}
                     />
                 </TouchableOpacity>
+                <Text style={{ ...styles.bookContent, fontWeight: 'bold' }}>Read</Text>
             </View>
 
             <ScrollView style={styles.contentContainer}>
+                <Text style={{ ...styles.bookContent, fontWeight: 'bold', marginBottom: 20, }}>Content:</Text>
                 <Text style={styles.bookContent}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur dapibus orci
-                    eu nisl egestas, in euismod nisi viverra. Fusce in velit id libero venenatis
-                    vehicula. Fusce varius dui a purus euismod euismod. Maecenas eget malesuada arcu.
-                    Proin non ultrices metus. Vestibulum id libero non est tincidunt finibus.
-
-                    Mauris id urna massa. Integer vitae purus vel justo bibendum feugiat. Sed
-                    condimentum, felis et congue euismod, dui libero sagittis orci, id vehicula
-                    augue ex quis urna. Curabitur in turpis et ante pellentesque faucibus sit amet
-                    vel arcu. Etiam varius justo eu tincidunt auctor. Sed at mi vestibulum, posuere
-                    lectus vel, euismod justo. Proin quis lectus felis. Nulla facilisi. Vivamus
-                    faucibus a libero at auctor. Suspendisse rhoncus risus et elit euismod
-                    tincidunt. Quisque eleifend justo et ligula convallis tincidunt. Integer aliquet
-                    tortor vel nibh cursus, a consectetur lorem interdum. Cras viverra euismod quam,
-                    a volutpat metus gravida ut. Quisque facilisis velit vel dui suscipit dictum.
-
-                    In et sapien a enim tincidunt lacinia non a libero. Aliquam fermentum ligula
-                    quam, sed viverra neque tincidunt quis. Praesent congue, ipsum id feugiat
-                    tincidunt, quam odio lacinia velit, ut viverra odio justo id dui. Nam sit amet
-                    euismod est. Curabitur consequat luctus libero. Ut auctor, nunc eu dictum
-                    faucibus, nisl ligula tincidunt elit, non eleifend enim quam nec mi. Nunc vitae
-                    turpis vel quam vulputate bibendum. Aenean feugiat odio nec libero efficitur
-                    fermentum. Nullam non laoreet purus. Vestibulum pharetra sapien non diam
-                    tristique, ac iaculis tellus bibendum.
-
-                    ... (Repeat or extend the content to make it longer)
+                    In the heart of a bustling city, 'The Secrets of Serendipity' unfolds the captivating story of Jane, an aspiring young artist, and her serendipitous encounters with an enigmatic stranger named Leo. Drawn together by the whims of fate, their lives become entwined in a web of mystery and intrigue.
+                </Text>
+                <Text style={styles.bookContent}>
+                    {'\n'}As Jane delves deeper into her art and Leo's world, she discovers an ancient and mystical connection between them, one that transcends time and space. Together, they embark on a thrilling journey to unravel the secrets of their shared destiny.
+                </Text>
+                <Text style={styles.bookContent}>
+                    {'\n'}Through a tapestry of vivid prose and rich character development, 'The Secrets of Serendipity' explores themes of love, destiny, and the power of serendipitous moments in our lives. It takes readers on a mesmerizing ride through the bustling streets of the city, into hidden realms of art and spirituality, and ultimately, to a profound understanding of the interconnectedness of all things.
+                </Text>
+                <Text style={styles.bookContent}>
+                    {'\n'}With its compelling narrative and thought-provoking themes, 'The Secrets of Serendipity' is a literary gem that will leave readers pondering the serendipitous moments in their own lives long after they turn the final page.
                 </Text>
             </ScrollView>
         </Layout>
@@ -62,17 +49,21 @@ const styles = StyleSheet.create({
     topBar: {
         margin: 10,
         marginTop: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 
     contentContainer: {
         flex: 1,
-        paddingHorizontal: 10,
+        margin: 10,
+        padding: 20,
+        backgroundColor: 'white',
+        borderRadius: 10,
     },
 
     bookContent: {
-        fontSize: 16,
-        lineHeight: 24,
-        marginVertical: 20,
+        fontSize: 20,
+        textAlign: 'justify', 
     },
 });
 

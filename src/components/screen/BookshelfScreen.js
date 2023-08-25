@@ -15,10 +15,6 @@ const BookshelfScreen = ({ navigation }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [items] = useState(bookList); // item list
 
-    const handleSearch = () => {
-        navigation.navigate('SearchScreen', { query: searchQuery });
-    };
-
     const handleSearchSubmit = () => {
         navigation.navigate('SearchScreen', { query: searchQuery });
     };
@@ -31,7 +27,7 @@ const BookshelfScreen = ({ navigation }) => {
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.itemContainer} onPress={() => getItem(item)}>
             <Image
-                source={item.imagePath}
+                source={item.image_path}
                 style={styles.itemImage}
             />
             <Text style={styles.itemTitle}>{item.title}</Text>
@@ -52,13 +48,13 @@ const BookshelfScreen = ({ navigation }) => {
                 <Button
                     style={styles.searchButton}
                     title="Search"
-                    onPress={handleSearch}
+                    onPress={handleSearchSubmit}
                 />
             </View>
 
             <FlatList
                 data={items}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.book_id.toString()}
                 renderItem={renderItem}
                 numColumns={numColumns} // set number of coloumn
             />

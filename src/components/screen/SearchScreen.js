@@ -27,19 +27,6 @@ const SearchScreen = ({ route, navigation }) => {
     handleSearch(query);
   }, [query]);
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.itemContainer} onPress={() => getItem(item)}>
-      <Image
-        source={item.imagePath}
-        style={styles.itemImage}
-      />
-      <View style={styles.itemInfo}>
-        <Text style={styles.itemText}>{item.id}</Text>
-        <Text style={styles.itemText}>{item.title}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-
   const handleSearch = (userInput) => {
     setSearchQuery(userInput);
 
@@ -49,6 +36,20 @@ const SearchScreen = ({ route, navigation }) => {
 
     setFilteredItems(filtered);
   };
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity style={styles.itemContainer} onPress={() => getItem(item)}>
+      <Image
+        source={item.image_path}
+        style={styles.itemImage}
+      />
+      <View style={styles.itemInfo}>
+        <Text style={styles.itemText}>{item.title}</Text>
+        <Text style={styles.itemText}>{item.author}</Text>
+        <Text style={styles.itemText}>{item.publisher}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <Layout style={styles.container}>
@@ -72,7 +73,7 @@ const SearchScreen = ({ route, navigation }) => {
       <FlatList
         style={styles.flatList}
         data={filteredItems}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.book_id.toString()}
         renderItem={renderItem}
       />
     </Layout>
