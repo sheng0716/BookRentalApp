@@ -1,14 +1,27 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { Layout, Icon, Button, Modal } from '@ui-kitten/components';
+import React, { useState, useEffect } from 'react';
+import { View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { Layout, Icon, Button, Modal, Text } from '@ui-kitten/components';
+import BooksDbService from '../../assets/BooksDbService';
 
 const BookDetailScreen = ({ route, navigation }) => {
 
     const { bookDetail } = route.params; // Get the book data from the route params
     const [isBookDetailModalVisible, setIsBookDetailModalVisible] = useState(false);
 
+    const [isBookAddedModalVisible, setIsBookAddedModalVisible] = useState(false);
+    const [isBookRemovedModalVisible, setIsBookRemovedModalVisible] = useState(false);
+
+    const [isAddButtonVisible, setIsAddButtonVisible] = useState(true); // Initially show the Add button
+
+    const successMessage = 'Added Successfully';
+    const successRemoveMessage = 'Removed Successfully';
+
     const goBack = () => {
         navigation.goBack();
+    };
+
+    const goReadScreen = () => {
+        navigation.navigate('ReadScreen', { bookDetail: bookDetail })
     };
 
     const showMemberModal = () => {
@@ -19,13 +32,77 @@ const BookDetailScreen = ({ route, navigation }) => {
         alert("showShareModal");
     };
 
-    const addToBookshelfModal = () => {
-        alert("AddToBookshelf");
+    const addToBookshelfModal = async () => {
+        try {
+            const userId = 1;
+            const bookId = bookDetail.book_id;
+
+            // Call the BooksDbService to insert the record
+            const result = await BooksDbService.insertIntoBookshelves(userId, bookId);
+
+            // Handle success
+            console.log(result);
+
+            // Close the modal or perform other actions as needed
+            setIsBookAddedModalVisible(true);
+
+            // Toggle visibility of buttons
+            setIsAddButtonVisible(false);
+
+        } catch (error) {
+            // Handle errors
+            console.error("Error adding book to bookshelf: ", error);
+        }
     };
 
-    const goReadScreen = () => {
-        navigation.navigate('ReadScreen', { bookDetail: bookDetail })
+    const removeFromBookshelfModal = async () => {
+        try {
+            const userId = 1;
+            const bookId = bookDetail.book_id;
+
+            // Call the BooksDbService to remove the record
+            const result = await BooksDbService.removeFromBookshelves(userId, bookId);
+
+            // Handle success
+            console.log(result);
+
+            // Show the "Removed from Bookshelf" modal
+            setIsBookRemovedModalVisible(true);
+
+            // Toggle visibility of buttons
+            setIsAddButtonVisible(true);
+
+        } catch (error) {
+            // Handle errors
+            console.error("Error removing book from bookshelf: ", error);
+        }
     };
+
+    // Function to check if the book is in the user's bookshelf
+    const checkBookInBookshelf = async () => {
+        try {
+            const userId = 1;
+            const bookId = bookDetail.book_id;
+
+            // Call the BooksDbService to get the user's bookshelf
+            const bookshelf = await BooksDbService.getBookshelfByUserId(userId);
+
+            // Check if the book is in the user's bookshelf
+            const bookExists = bookshelf.includes(bookId);
+
+            // Update the visibility of the Add button based on whether the book exists
+            setIsAddButtonVisible(!bookExists);
+
+        } catch (error) {
+            // Handle errors
+            console.error("Error checking bookshelf: ", error);
+        }
+    };
+
+    useEffect(() => {
+        // Check if the book is in the user's bookshelf when the component mounts
+        checkBookInBookshelf();
+    }, []);
 
     return (
         <Layout style={styles.container}>
@@ -80,11 +157,21 @@ const BookDetailScreen = ({ route, navigation }) => {
             </ScrollView>
 
             <View style={styles.bottomButtons}>
-                <Button
-                    onPress={addToBookshelfModal}
-                    appearance='outline'>
-                    Add to Bookshelf
-                </Button>
+                {isAddButtonVisible && (
+                    <Button
+                        onPress={addToBookshelfModal}
+                        appearance='outline'>
+                        Add to Bookshelf
+                    </Button>
+                )}
+
+                {!isAddButtonVisible && (
+                    <Button
+                        onPress={removeFromBookshelfModal}
+                        appearance='outline'>
+                        Remove from Bookshelf
+                    </Button>
+                )}
 
                 <Button
                     onPress={goReadScreen}
@@ -121,6 +208,28 @@ const BookDetailScreen = ({ route, navigation }) => {
 
                     <Text style={styles.itemTextLabel}>ISBN:</Text>
                     <Text style={styles.itemText}>{bookDetail.isbn}</Text>
+                </View>
+            </Modal>
+
+            {/* "Added Successfully" Modal */}
+            <Modal
+                visible={isBookAddedModalVisible}
+                backdropStyle={styles.modalBackdrop}
+                onBackdropPress={() => setIsBookAddedModalVisible(false)}>
+                <View style={styles.modalContainer}>
+                    <Text style={styles.modalText}>{successMessage}</Text>
+                    <Icon name="checkmark-circle-2" width={24} height={24} fill="green" />
+                </View>
+            </Modal>
+
+            {/* "Removed Successfully" Modal */}
+            <Modal
+                visible={isBookRemovedModalVisible}
+                backdropStyle={styles.modalBackdrop}
+                onBackdropPress={() => setIsBookRemovedModalVisible(false)}>
+                <View style={styles.modalContainer}>
+                    <Text style={styles.modalText}>{successRemoveMessage}</Text>
+                    <Icon name="checkmark-circle-2" width={24} height={24} fill="green" />
                 </View>
             </Modal>
         </Layout>
@@ -200,6 +309,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 20,
         borderRadius: 10,
+        alignItems: 'center',
+    },
+
+    modalText: {
+        fontSize: 20,
+        marginBottom: 10,
     },
 });
 

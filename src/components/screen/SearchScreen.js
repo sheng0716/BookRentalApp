@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { Layout, Icon, Input } from '@ui-kitten/components';
+import { View, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Layout, Icon, Input, Text } from '@ui-kitten/components';
 import BooksDbService from '../../assets/BooksDbService'; // Import your database functions
 
 const SearchIcon = (props) => (
@@ -27,7 +27,12 @@ const SearchScreen = ({ route, navigation }) => {
   // Use useEffect to fetch data when the component mounts
   useEffect(() => {
     fetchData();
-  });
+  }, []);
+
+  useEffect(() => {
+    // Call the handleSearch function when the component mounts
+    handleSearch(query);
+  }, [query]);
 
   const goBack = () => {
     navigation.goBack();
@@ -37,11 +42,6 @@ const SearchScreen = ({ route, navigation }) => {
     // Function for click on an item
     navigation.navigate('BookDetailScreen', { bookDetail: item });
   };
-
-  useEffect(() => {
-    // Call the handleSearch function when the component mounts
-    handleSearch(query);
-  }, [query]);
 
   const handleSearch = (userInput) => {
     setSearchQuery(userInput);

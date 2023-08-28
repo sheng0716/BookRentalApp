@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { Layout, Icon } from '@ui-kitten/components';
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Layout, Icon, Text } from '@ui-kitten/components';
 
 const ReadScreen = ({ route, navigation }) => {
     const { bookDetail } = route.params; // not used

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import { Layout, Icon, Input } from '@ui-kitten/components';
-import BooksDbService from '../../assets/BooksDbService'; // Import your database functions
+import { View, Button, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { Layout, Icon, Input, Text } from '@ui-kitten/components';
+import BooksDbService from '../../assets/BooksDbService'; // Import database functions
 
 const SearchIcon = (props) => (
     <Icon {...props} name='search-outline' />
@@ -29,7 +29,7 @@ const HomeScreen = ({ navigation }) => {
     // Use useEffect to fetch data when the component mounts
     useEffect(() => {
         fetchData();
-    });
+    }, []);
 
     const handleSearchSubmit = () => {
         navigation.navigate('SearchScreen', { query: searchQuery });
