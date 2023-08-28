@@ -16,7 +16,7 @@ const HomeScreen = ({ navigation }) => {
     const [books, setBooks] = useState([]); // Initialize with an empty array
     const recommendedBook = books[1]; // Recommend one book in books
 
-    // Define a function to fetch data and update the state
+    // Fetch data and update the state
     const fetchData = async () => {
         try {
             const booksData = await BooksDbService.getAllBooks();
@@ -29,7 +29,7 @@ const HomeScreen = ({ navigation }) => {
     // Use useEffect to fetch data when the component mounts
     useEffect(() => {
         fetchData();
-    }, []);
+    });
 
     const handleSearchSubmit = () => {
         navigation.navigate('SearchScreen', { query: searchQuery });

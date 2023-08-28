@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Layout, Icon, Input } from '@ui-kitten/components';
-import bookList from '../../assets/bookData'; // Import the initialItems array
+import BooksDbService from '../../assets/BooksDbService'; // Import your database functions
 
 const SearchIcon = (props) => (
   <Icon {...props} name='search-outline' />
@@ -9,9 +9,25 @@ const SearchIcon = (props) => (
 
 const SearchScreen = ({ route, navigation }) => {
 
+  const [books, setBooks] = useState([]); // Initialize with an empty array
   const { query } = route.params; // Get the query from the route params
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredItems, setFilteredItems] = useState(bookList); // item list
+  const [filteredItems, setFilteredItems] = useState(books); // item list
+
+  // Fetch data and update the state
+  const fetchData = async () => {
+    try {
+      const booksData = await BooksDbService.getAllBooks();
+      setBooks(booksData); // Update the state with the fetched data
+    } catch (error) {
+      console.error('Error fetching data from the database:', error);
+    }
+  };
+
+  // Use useEffect to fetch data when the component mounts
+  useEffect(() => {
+    fetchData();
+  });
 
   const goBack = () => {
     navigation.goBack();
@@ -30,7 +46,7 @@ const SearchScreen = ({ route, navigation }) => {
   const handleSearch = (userInput) => {
     setSearchQuery(userInput);
 
-    const filtered = bookList.filter(item =>
+    const filtered = books.filter(item =>
       item.title.toLowerCase().includes(userInput.toLowerCase())
     );
 
@@ -40,7 +56,7 @@ const SearchScreen = ({ route, navigation }) => {
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.itemContainer} onPress={() => getItem(item)}>
       <Image
-        source={item.image_path}
+        source={{ uri: 'asset:/img/' + item.image_path }}
         style={styles.itemImage}
       />
       <View style={styles.itemInfo}>

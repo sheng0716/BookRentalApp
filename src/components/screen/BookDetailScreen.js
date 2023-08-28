@@ -19,7 +19,7 @@ const BookDetailScreen = ({ route, navigation }) => {
         alert("showShareModal");
     };
 
-    const AddToBookshelfModal = () => {
+    const addToBookshelfModal = () => {
         alert("AddToBookshelf");
     };
 
@@ -57,7 +57,7 @@ const BookDetailScreen = ({ route, navigation }) => {
 
                 <TouchableOpacity style={styles.itemContainer} onPress={() => setIsBookDetailModalVisible(true)}>
                     <Image
-                        source={bookDetail.image_path} // Display the book image
+                        source={{ uri: 'asset:/img/' + bookDetail.image_path }} // Display the book image
                         style={styles.itemImage}
                     />
                     <View style={styles.itemInfo}>
@@ -81,7 +81,7 @@ const BookDetailScreen = ({ route, navigation }) => {
 
             <View style={styles.bottomButtons}>
                 <Button
-                    onPress={AddToBookshelfModal}
+                    onPress={addToBookshelfModal}
                     appearance='outline'>
                     Add to Bookshelf
                 </Button>
@@ -101,7 +101,7 @@ const BookDetailScreen = ({ route, navigation }) => {
                 {/* Modal content goes here */}
                 <View style={styles.modalContainer}>
                     <Image
-                        source={bookDetail.image_path} // Display the book image
+                        source={{ uri: 'asset:/img/' + bookDetail.image_path }} // Display the book image
                         style={{
                             width: 100,
                             height: 150,

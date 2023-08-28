@@ -1,7 +1,7 @@
 import SQLite from 'react-native-sqlite-storage';
 
 // Open a connection to the database
-const db = SQLite.openDatabase({ name: 'BookRentalApp.db', createFromLocation: '~/book_rental_app.db' });
+const db = SQLite.openDatabase({ name: 'books.db', createFromLocation: '~/book_rental_app.db' });
 
 // Function to get all books from the database
 const getAllBooks = () => {
