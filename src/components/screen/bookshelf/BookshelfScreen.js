@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, Button, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { Layout, Icon, Input, Modal } from '@ui-kitten/components';
 import { useFocusEffect } from '@react-navigation/native';
-import BooksDbService from '../../assets/BooksDbService'; // Import database functions
+import BooksDbService from '../../../assets/BooksDbService';
+import BookshelvesDbService from '../../../assets/BookshelvesDbService'; // Import database functions
 
 const SearchIcon = (props) => (
     <Icon {...props} name='search-outline' />
@@ -44,7 +45,7 @@ const BookshelfScreen = ({ navigation }) => {
             const bookId = itemToDelete.book_id;
 
             // Call the BooksDbService to insert the record
-            const result = await BooksDbService.removeFromBookshelves(userId, bookId);
+            const result = await BookshelvesDbService.removeFromBookshelves(userId, bookId);
 
             // Handle success
             console.log(result);
@@ -78,7 +79,7 @@ const BookshelfScreen = ({ navigation }) => {
                     const userId = 1;
 
                     // Fetch book IDs associated with the user from your database
-                    const userBookIds = await BooksDbService.getBookshelfByUserId(userId);
+                    const userBookIds = await BookshelvesDbService.getBookshelfByUserId(userId);
 
                     console.log("Books id: " + userBookIds);
 

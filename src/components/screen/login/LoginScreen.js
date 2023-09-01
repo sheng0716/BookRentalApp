@@ -17,7 +17,7 @@ const LoginScreen = ({ }) => {
     return (
         <View style={styles.container}>
 
-            <Image style={styles.image} source={require("../../assets/img/login_book_logo.jpg")} />
+            <Image style={styles.image} source={require("../../../assets/img/login_book_logo.jpg")} />
             <StatusBar style="auto" />
             <View style={styles.inputView}>
                 <TextInput

@@ -1,10 +1,12 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import TabNavigator from './common/TabNavigator';
-import SearchScreen from './screen/SearchScreen';
-import BookDetailScreen from './screen/BookDetailScreen';
-import ReadScreen from './screen/ReadScreen';
-import LoginScreen from './screen/LoginScreen';
+import SearchScreen from './screen/home/SearchScreen';
+import BookDetailScreen from './screen/bookshelf/BookDetailScreen';
+import ReadScreen from './screen/bookshelf/ReadScreen';
+import LoginScreen from './screen/login/LoginScreen';
+import SettingsScreen from './screen/profile/SettingsScreen';
+import MemberScreen from './screen/profile/MemberScreen';
 
 const Stack = createStackNavigator();
 
@@ -38,6 +40,18 @@ const StackNavigator = () => (
       name='ReadScreen'
       component={ReadScreen}
       options={{ headerShown: false }}
+    />
+
+    <Stack.Screen
+      name='Settings'
+      component={SettingsScreen}
+      options={{ headerShown: true, headerTitleAlign: 'center', headerTitleStyle: { fontWeight: 'bold', fontSize: 22 } }}
+    />
+
+    <Stack.Screen
+      name='Member'
+      component={MemberScreen}
+      options={{ headerShown: true, headerTitleAlign: 'center', headerTitleStyle: { fontWeight: 'bold', fontSize: 22 } }}
     />
 
   </Stack.Navigator>

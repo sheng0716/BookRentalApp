@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Layout, Icon, Button, Modal, Text } from '@ui-kitten/components';
-import BooksDbService from '../../assets/BooksDbService';
+import BookshelvesDbService from '../../../assets/BookshelvesDbService';
+import Share from 'react-native-share';
+import CustomAlert from '../../../assets/CustomAlert';
+import MembershipConfirmationDialog from '../../../assets/MembershipConfirmationDialog';
 
 const BookDetailScreen = ({ route, navigation }) => {
 
@@ -10,8 +13,11 @@ const BookDetailScreen = ({ route, navigation }) => {
 
     const [isBookAddedModalVisible, setIsBookAddedModalVisible] = useState(false);
     const [isBookRemovedModalVisible, setIsBookRemovedModalVisible] = useState(false);
-
     const [isAddButtonVisible, setIsAddButtonVisible] = useState(true); // Initially show the Add button
+
+    const [isMember, setIsMember] = useState(false); // Simulated membership status
+    const [membershipModalVisible, setMembershipModalVisible] = useState(false);
+    const [customAlertVisible, setCustomAlertVisible] = useState(false); // State for custom alert
 
     const successMessage = 'Added Successfully';
     const successRemoveMessage = 'Removed Successfully';
@@ -25,11 +31,37 @@ const BookDetailScreen = ({ route, navigation }) => {
     };
 
     const showMemberModal = () => {
-        alert("showMemberModal");
+        if (isMember) {
+            // If the user is already a member, show an alert
+            setCustomAlertVisible(true);
+        } else {
+            // If the user is not a member, ask them if they want to become a member
+            setMembershipModalVisible(true);
+        }
     };
 
-    const showShareModal = () => {
-        alert("showShareModal");
+    const handleConfirmMembership = () => {
+        setIsMember(true); // Update the simulated membership status
+        setMembershipModalVisible(false); // Close the confirmation modal
+    };
+
+    const handleCustomAlertDismiss = () => {
+        setCustomAlertVisible(false);
+    };
+
+    const showShareModal = async () => {
+        try {
+            const options = {
+                title: 'Share via',
+                message: 'Tell your friends to check this out!',
+                url: '',
+                subject: 'Subject'
+            };
+
+            await Share.open(options);
+        } catch (error) {
+            console.error("Error sharing: ", error.message);
+        }
     };
 
     const addToBookshelfModal = async () => {
@@ -37,8 +69,8 @@ const BookDetailScreen = ({ route, navigation }) => {
             const userId = 1;
             const bookId = bookDetail.book_id;
 
-            // Call the BooksDbService to insert the record
-            const result = await BooksDbService.insertIntoBookshelves(userId, bookId);
+            // Call the BookshelvesDbService to insert the record
+            const result = await BookshelvesDbService.insertIntoBookshelves(userId, bookId);
 
             // Handle success
             console.log(result);
@@ -60,8 +92,8 @@ const BookDetailScreen = ({ route, navigation }) => {
             const userId = 1;
             const bookId = bookDetail.book_id;
 
-            // Call the BooksDbService to remove the record
-            const result = await BooksDbService.removeFromBookshelves(userId, bookId);
+            // Call the BookshelvesDbService to remove the record
+            const result = await BookshelvesDbService.removeFromBookshelves(userId, bookId);
 
             // Handle success
             console.log(result);
@@ -84,8 +116,8 @@ const BookDetailScreen = ({ route, navigation }) => {
             const userId = 1;
             const bookId = bookDetail.book_id;
 
-            // Call the BooksDbService to get the user's bookshelf
-            const bookshelf = await BooksDbService.getBookshelfByUserId(userId);
+            // Call the BookshelvesDbService to get the user's bookshelf
+            const bookshelf = await BookshelvesDbService.getBookshelfByUserId(userId);
 
             // Check if the book is in the user's bookshelf
             const bookExists = bookshelf.includes(bookId);
@@ -118,7 +150,7 @@ const BookDetailScreen = ({ route, navigation }) => {
                     <View style={styles.iconContainer}>
                         <TouchableOpacity onPress={showMemberModal}>
                             <Icon
-                                name='cube-outline'
+                                name={isMember ? 'cube' : 'cube-outline'}
                                 style={{ width: 40, height: 50 }}
                             />
                         </TouchableOpacity>
@@ -186,7 +218,7 @@ const BookDetailScreen = ({ route, navigation }) => {
                 backdropStyle={styles.modalBackdrop}
                 onBackdropPress={() => setIsBookDetailModalVisible(false)}>
                 {/* Modal content goes here */}
-                <View style={styles.modalContainer}>
+                <View style={{ ...styles.modalContainer, alignItems: 'flex-start' }}>
                     <Image
                         source={{ uri: 'asset:/img/' + bookDetail.image_path }} // Display the book image
                         style={{
@@ -210,6 +242,25 @@ const BookDetailScreen = ({ route, navigation }) => {
                     <Text style={styles.itemText}>{bookDetail.isbn}</Text>
                 </View>
             </Modal>
+
+            {/* Membership modal */}
+            <Modal
+                visible={membershipModalVisible}
+                backdropStyle={styles.modalBackdrop}
+                onBackdropPress={() => setMembershipModalVisible(false)}
+            >
+                <MembershipConfirmationDialog
+                    onConfirm={handleConfirmMembership}
+                    onCancel={() => setMembershipModalVisible(false)}
+                />
+            </Modal>
+
+            {/* Use the CustomAlert component for custom alerts */}
+            <CustomAlert
+                visible={customAlertVisible}
+                message={'You are already a member.'}
+                onDismiss={handleCustomAlertDismiss}
+            />
 
             {/* "Added Successfully" Modal */}
             <Modal
