@@ -5,21 +5,28 @@ import SearchScreen from './screen/home/SearchScreen';
 import BookDetailScreen from './screen/bookshelf/BookDetailScreen';
 import ReadScreen from './screen/bookshelf/ReadScreen';
 import LoginScreen from './screen/login/LoginScreen';
+import RegisterScreen from './screen/login/RegisterScreen';
 import SettingsScreen from './screen/profile/SettingsScreen';
 import MemberScreen from './screen/profile/MemberScreen';
 
 const Stack = createStackNavigator();
 
 const StackNavigator = () => (
-  <Stack.Navigator initialRouteName='Home'>
-    {/* <Stack.Screen
+  <Stack.Navigator initialRouteName='Login'>
+    <Stack.Screen
       name='Login'
       component={LoginScreen}
       options={{ headerShown: false }}
-    /> */}
+    />
 
     <Stack.Screen
-      name='Home'
+      name='Register'
+      component={RegisterScreen}
+      options={{ headerShown: false }}
+    />
+
+    <Stack.Screen
+      name='TabNavigator'
       component={TabNavigator}
       options={{ headerShown: false }}
     />

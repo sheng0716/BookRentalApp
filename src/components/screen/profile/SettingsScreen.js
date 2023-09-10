@@ -31,7 +31,7 @@ const CustomSwitch = ({ value, onValueChange }) => {
   );
 };
 
-const SettingsScreen = () => {
+const SettingsScreen = ({ navigation }) => {
   const [notiEnabled, setNotiEnabled] = useState(false);
 
   useEffect(() => {
@@ -54,13 +54,11 @@ const SettingsScreen = () => {
   }, []);
 
 
-
   const handleLogOut = () => {
+    Alert.alert("Log Out Successfully!!\nThank You!!");
 
     //Log out session
-
-    Alert.alert("Log Out Successfully!!\nThank You!!"
-    );
+    navigation.navigate('Login');
   }
 
   return (

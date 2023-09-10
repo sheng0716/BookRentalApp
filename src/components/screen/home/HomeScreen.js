@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Button, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { Layout, Icon, Input, Text } from '@ui-kitten/components';
-import BooksDbService from '../../../assets/BooksDbService'; // Import database functions
+import BooksDbService from '../../../assets/DbService/BooksDbService'; // Import database functions
 
 const SearchIcon = (props) => (
     <Icon {...props} name='search-outline' />
@@ -10,11 +10,20 @@ const SearchIcon = (props) => (
 const numColumns = 3.5; // Set numColumns inside the component
 const bookWidth = Dimensions.get('window').width / numColumns;
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, userId }) => {
 
     const [searchQuery, setSearchQuery] = useState('');
     const [books, setBooks] = useState([]); // Initialize with an empty array
     const recommendedBook = books[1]; // Recommend one book in books
+
+    const handleSearchSubmit = () => {
+        navigation.navigate('SearchScreen', { query: searchQuery, userId });
+    };
+
+    const getItem = (book) => {
+        // Function for click on an book
+        navigation.navigate('BookDetailScreen', { bookDetail: book, userId });
+    };
 
     // Fetch data and update the state
     const fetchData = async () => {
@@ -30,15 +39,6 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         fetchData();
     }, []);
-
-    const handleSearchSubmit = () => {
-        navigation.navigate('SearchScreen', { query: searchQuery });
-    };
-
-    const getItem = (book) => {
-        // Function for click on an book
-        navigation.navigate('BookDetailScreen', { bookDetail: book });
-    };
 
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.bookContainer} onPress={() => getItem(item)}>
@@ -92,7 +92,7 @@ const HomeScreen = ({ navigation }) => {
                 ) : (
                     <Text style={styles.recommendedItemText}>No recommended book available.</Text>
                 )}
-                
+
                 <View>
                     <Text style={{ ...styles.recommendedItemText, padding: 10, textAlign: 'justify', }}>
                         This is the description of the recommended book.

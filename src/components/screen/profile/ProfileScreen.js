@@ -2,50 +2,58 @@ import { React, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { Layout, Icon } from '@ui-kitten/components';
 import UserAvatar from 'react-native-user-avatar';
+import UsersDbService from '../../../assets/DbService/UsersDbService';
 
 const ProfileScreen = ({ navigation, route }) => {
-
-    const navSetting = () => {
-        navigation.navigate('Settings');
-    };
-
-    const navMember = () => {
-        navigation.navigate('Member', { isMember: userData.isMember });
-    };
+    const { userId } = route.params; // Get the userId from the route params
 
     const [isEditable, setIsEditable] = useState(false);
-
-    const handleEditProcess = () => {
-        //function for click on edit icon
-        setIsEditable(!isEditable);
-    }
-
-    const handleSaveProcess = () => {
-        //function for click on save icon
-        setIsEditable(false);
-
-        //Update database
-
-        Alert.alert("Profile Saving", "Saved Successfully");
-    }
-
     const [userData, setUserData] = useState({
-        //get data from database
+        // get data from database
+        userId: "0",
         username: "USER NAME",
         email: "abcd@hotmail.com",
         phoneNumber: "012-3456789",
         isMember: false,
     });
 
-    useEffect(() => {
-        // Use useEffect to update userData when the route params change
-        if (route.params?.isMember !== undefined) {
-            setUserData(prevData => ({
-                ...prevData,
-                isMember: route.params.isMember,
-            }));
+    const navSetting = () => {
+        navigation.navigate('Settings');
+    };
+
+    const navMember = () => {
+        navigation.navigate('Member', { userId, isMember : userData.isMember });
+    };
+
+    const handleEditProcess = () => {
+        //function for click on edit icon
+        setIsEditable(!isEditable);
+    }
+
+    const handleSaveProcess = async () => {
+        //function for click on save icon
+        setIsEditable(false);
+
+        await UsersDbService.updateUser(userId, userData);
+
+        Alert.alert("Profile Saving", "Saved Successfully");
+    }
+
+    // Fetch user data and update the state
+    const fetchUserData = async () => {
+        try {
+            const userData = await UsersDbService.getUserDataByUserId(userId);
+            console.log(userData)
+            setUserData(userData); // Update the state with the fetched user data
+        } catch (error) {
+            console.error('Error fetching user data:', error);
         }
-    }, [route.params?.isMember]); // Dependency array for useEffect
+    };
+
+    // Use useEffect to fetch user data when the component mounts
+    useEffect(() => {
+        fetchUserData();
+    }, [route.params]); // Ensures it runs once isMember in route.params changed
 
     const handleChange = (key, value) => {
         setUserData((prevData) => ({
@@ -94,7 +102,6 @@ const ProfileScreen = ({ navigation, route }) => {
                     <Text style={styles.email}>{userData.email}</Text>
 
                 </View>
-
 
                 <View style={styles.editSave}>
                     <TouchableOpacity onPress={handleEditProcess}>

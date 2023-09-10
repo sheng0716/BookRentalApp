@@ -7,14 +7,20 @@ import ProfileScreen from '../screen/profile/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
-const TabNavigator = () => (
-  <Tab.Navigator screenOptions={{ headerShown: false }}
-    tabBar={(props) => <BottomTabBar {...props} />}
-    initialRouteName='HomeScreen'>
-    <Tab.Screen name='HomeScreen' component={HomeScreen} />
-    <Tab.Screen name='BookshelfScreen' component={BookshelfScreen} />
-    <Tab.Screen name='ProfileScreen' component={ProfileScreen} />
-  </Tab.Navigator>
-);
+const TabNavigator = ({ route }) => {
+  const { userId } = route.params;
+
+  return (
+    <Tab.Navigator screenOptions={{ headerShown: false }}
+      tabBar={(props) => <BottomTabBar {...props} />}
+      initialRouteName='HomeScreen'>
+      <Tab.Screen name='HomeScreen'>
+        {(props) => <HomeScreen {...props} userId={userId} />}
+      </Tab.Screen>
+      <Tab.Screen name='BookshelfScreen' component={BookshelfScreen} />
+      <Tab.Screen name='ProfileScreen' component={ProfileScreen} />
+    </Tab.Navigator>
+  );
+};
 
 export default TabNavigator;

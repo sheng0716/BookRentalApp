@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, Button, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { Layout, Icon, Input, Modal } from '@ui-kitten/components';
 import { useFocusEffect } from '@react-navigation/native';
-import BooksDbService from '../../../assets/BooksDbService';
-import BookshelvesDbService from '../../../assets/BookshelvesDbService'; // Import database functions
+import BooksDbService from '../../../assets/DbService/BooksDbService';
+import BookshelvesDbService from '../../../assets/DbService/BookshelvesDbService'; // Import database functions
 
 const SearchIcon = (props) => (
     <Icon {...props} name='search-outline' />
@@ -12,8 +12,9 @@ const SearchIcon = (props) => (
 const numColumns = 3; // Set numColumns inside the component
 const itemWidth = Dimensions.get('window').width / numColumns;
 
-const BookshelfScreen = ({ navigation }) => {
+const BookshelfScreen = ({ navigation, route }) => {
 
+    const { userId } = route.params; // Get the userId from the route params
     const [searchQuery, setSearchQuery] = useState('');
     const [books, setBooks] = useState([]); // Initialize with an empty array
     const [items, setItems] = useState([]); // item list
@@ -27,7 +28,7 @@ const BookshelfScreen = ({ navigation }) => {
     }, []);
 
     const handleSearchSubmit = () => {
-        navigation.navigate('SearchScreen', { query: searchQuery });
+        navigation.navigate('SearchScreen', { query: searchQuery, userId });
     };
 
     const goReadScreen = (bookDetail) => {
@@ -41,7 +42,6 @@ const BookshelfScreen = ({ navigation }) => {
 
     const deleteBook = async () => {
         try {
-            const userId = 1;
             const bookId = itemToDelete.book_id;
 
             // Call the BooksDbService to insert the record
@@ -78,7 +78,7 @@ const BookshelfScreen = ({ navigation }) => {
                     // const userId = route.params?.userId; // pass the userId when navigating to this screen
                     const userId = 1;
 
-                    // Fetch book IDs associated with the user from your database
+                    // Call the BookshelvesDbService to get the user's bookshelf
                     const userBookIds = await BookshelvesDbService.getBookshelfByUserId(userId);
 
                     console.log("Books id: " + userBookIds);

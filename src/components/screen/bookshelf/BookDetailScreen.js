@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { Layout, Icon, Button, Modal, Text } from '@ui-kitten/components';
-import BookshelvesDbService from '../../../assets/BookshelvesDbService';
 import Share from 'react-native-share';
+import { Layout, Icon, Button, Modal, Text } from '@ui-kitten/components';
 import CustomAlert from '../../../assets/CustomAlert';
-import MembershipConfirmationDialog from '../../../assets/MembershipConfirmationDialog';
+import BookshelvesDbService from '../../../assets/DbService/BookshelvesDbService';
+import UsersDbService from '../../../assets/DbService/UsersDbService';
 
-const BookDetailScreen = ({ route, navigation }) => {
+const BookDetailScreen = ({ navigation, route }) => {
 
-    const { bookDetail } = route.params; // Get the book data from the route params
+    const { bookDetail, userId } = route.params; // Get the book data, userId from the route params
     const [isBookDetailModalVisible, setIsBookDetailModalVisible] = useState(false);
 
     const [isBookAddedModalVisible, setIsBookAddedModalVisible] = useState(false);
@@ -16,7 +16,6 @@ const BookDetailScreen = ({ route, navigation }) => {
     const [isAddButtonVisible, setIsAddButtonVisible] = useState(true); // Initially show the Add button
 
     const [isMember, setIsMember] = useState(false); // Simulated membership status
-    const [membershipModalVisible, setMembershipModalVisible] = useState(false);
     const [customAlertVisible, setCustomAlertVisible] = useState(false); // State for custom alert
 
     const successMessage = 'Added Successfully';
@@ -28,25 +27,6 @@ const BookDetailScreen = ({ route, navigation }) => {
 
     const goReadScreen = () => {
         navigation.navigate('ReadScreen', { bookDetail: bookDetail })
-    };
-
-    const showMemberModal = () => {
-        if (isMember) {
-            // If the user is already a member, show an alert
-            setCustomAlertVisible(true);
-        } else {
-            // If the user is not a member, ask them if they want to become a member
-            setMembershipModalVisible(true);
-        }
-    };
-
-    const handleConfirmMembership = () => {
-        setIsMember(true); // Update the simulated membership status
-        setMembershipModalVisible(false); // Close the confirmation modal
-    };
-
-    const handleCustomAlertDismiss = () => {
-        setCustomAlertVisible(false);
     };
 
     const showShareModal = async () => {
@@ -61,6 +41,16 @@ const BookDetailScreen = ({ route, navigation }) => {
             await Share.open(options);
         } catch (error) {
             console.error("Error sharing: ", error.message);
+        }
+    };
+
+    const showMemberModal = () => {
+        if (isMember) {
+            // If the user is already a member, show an alert
+            setCustomAlertVisible(true);
+        } else {
+            // If the user is not a member, ask them if they want to become a member
+            navigation.navigate('Member', { userId, isMember })
         }
     };
 
@@ -89,7 +79,6 @@ const BookDetailScreen = ({ route, navigation }) => {
 
     const removeFromBookshelfModal = async () => {
         try {
-            const userId = 1;
             const bookId = bookDetail.book_id;
 
             // Call the BookshelvesDbService to remove the record
@@ -113,14 +102,13 @@ const BookDetailScreen = ({ route, navigation }) => {
     // Function to check if the book is in the user's bookshelf
     const checkBookInBookshelf = async () => {
         try {
-            const userId = 1;
             const bookId = bookDetail.book_id;
 
             // Call the BookshelvesDbService to get the user's bookshelf
-            const bookshelf = await BookshelvesDbService.getBookshelfByUserId(userId);
+            const userBookIds = await BookshelvesDbService.getBookshelfByUserId(userId);
 
             // Check if the book is in the user's bookshelf
-            const bookExists = bookshelf.includes(bookId);
+            const bookExists = userBookIds.includes(bookId);
 
             // Update the visibility of the Add button based on whether the book exists
             setIsAddButtonVisible(!bookExists);
@@ -131,7 +119,22 @@ const BookDetailScreen = ({ route, navigation }) => {
         }
     };
 
+    // Fetch user data and update the state
+    const fetchUserData = async () => {
+        try {
+            const userData = await UsersDbService.getUserDataByUserId(userId);
+            console.log(userData.isMember)
+            setIsMember(userData.isMember); // Update the state with the fetched user data
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+
+    // Use useEffect to fetch user data when the component mounts
     useEffect(() => {
+
+        fetchUserData();
+
         // Check if the book is in the user's bookshelf when the component mounts
         checkBookInBookshelf();
     }, []);
@@ -243,23 +246,11 @@ const BookDetailScreen = ({ route, navigation }) => {
                 </View>
             </Modal>
 
-            {/* Membership modal */}
-            <Modal
-                visible={membershipModalVisible}
-                backdropStyle={styles.modalBackdrop}
-                onBackdropPress={() => setMembershipModalVisible(false)}
-            >
-                <MembershipConfirmationDialog
-                    onConfirm={handleConfirmMembership}
-                    onCancel={() => setMembershipModalVisible(false)}
-                />
-            </Modal>
-
             {/* Use the CustomAlert component for custom alerts */}
             <CustomAlert
                 visible={customAlertVisible}
                 message={'You are already a member.'}
-                onDismiss={handleCustomAlertDismiss}
+                onDismiss={() => setCustomAlertVisible(false)}
             />
 
             {/* "Added Successfully" Modal */}

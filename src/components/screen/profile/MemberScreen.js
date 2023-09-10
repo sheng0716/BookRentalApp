@@ -1,31 +1,34 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableNativeFeedback, Alert } from 'react-native';
 import { Layout } from '@ui-kitten/components';
+import UsersDbService from '../../../assets/DbService/UsersDbService';
 
 const MemberScreen = ({ route, navigation }) => {
-    const goBack = (params) => {
+
+    const { userId, isMember } = route.params;
+
+    const goBack = () => {
         navigation.goBack();
     };
 
-    const handlePurchase = () => {
+    const handlePurchase = async () => {
 
         //Update database
+        const userData = await UsersDbService.getUserDataByUserId(userId);
+        userData.isMember = true;
+        await UsersDbService.updateUser(userId, userData);
 
         Alert.alert("Purchased Successfully!!\nThank You!!", "",
             [
                 {
                     text: "OK",
                     onPress: () => {
-                        navigation.navigate('ProfileScreen', { isMember: true });
+                        navigation.navigate('ProfileScreen', {isMember: isMember});
                     },
                 },
             ]
         );
-
-        route.params = true;
     }
-
-    const { isMember } = route.params;
 
     return (
         <Layout style={styles.container}>
@@ -79,8 +82,6 @@ const MemberScreen = ({ route, navigation }) => {
                             </TouchableNativeFeedback>
                         </View>
                     </View>
-
-
                 )}
             </View>
         </Layout>

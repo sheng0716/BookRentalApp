@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Layout, Icon, Input, Text } from '@ui-kitten/components';
-import BooksDbService from '../../../assets/BooksDbService'; // Import your database functions
+import BooksDbService from '../../../assets/DbService/BooksDbService'; // Import your database functions
 
 const SearchIcon = (props) => (
   <Icon {...props} name='search-outline' />
 );
 
-const SearchScreen = ({ route, navigation }) => {
+const SearchScreen = ({ navigation, route }) => {
 
   const [books, setBooks] = useState([]); // Initialize with an empty array
-  const { query } = route.params; // Get the query from the route params
+  const { query, userId } = route.params; // Get the query from the route params
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredItems, setFilteredItems] = useState(books); // item list
 
@@ -40,7 +40,7 @@ const SearchScreen = ({ route, navigation }) => {
 
   const getItem = (item) => {
     // Function for click on an item
-    navigation.navigate('BookDetailScreen', { bookDetail: item });
+    navigation.navigate('BookDetailScreen', { bookDetail: item, userId });
   };
 
   const handleSearch = (userInput) => {

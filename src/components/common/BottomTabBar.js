@@ -1,5 +1,6 @@
 import React from 'react';
 import { BottomNavigation, BottomNavigationTab, Icon } from '@ui-kitten/components';
+import { useRoute } from '@react-navigation/native';
 
 const BookOpenIcon = (props) => (
   <Icon {...props} name='book-open-outline' />
@@ -14,8 +15,11 @@ const PersonIcon = (props) => (
 );
 
 const BottomTabBar = ({ navigation, state }) => {
+  const route = useRoute();
+  const { userId } = route.params; // Get the userId from the route params
+
   const onSelect = (index) => {
-    navigation.navigate(state.routeNames[index]);
+    navigation.navigate(state.routeNames[index], { userId });
   };
 
   return (
