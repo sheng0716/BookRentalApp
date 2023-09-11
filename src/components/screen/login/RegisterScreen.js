@@ -32,7 +32,7 @@ const RegisterScreen = ({ navigation }) => {
             Alert.alert("Alert", data.message)
         } else {
             Alert.alert("Alert", data.message)
-            navigation.navigate('Home', { userId: data.userId })
+            navigation.navigate('TabNavigator', { userId: data.userId })
         }
     }
 
