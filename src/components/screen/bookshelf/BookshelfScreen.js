@@ -12,9 +12,8 @@ const SearchIcon = (props) => (
 const numColumns = 3; // Set numColumns inside the component
 const itemWidth = Dimensions.get('window').width / numColumns;
 
-const BookshelfScreen = ({ navigation, route }) => {
+const BookshelfScreen = ({ navigation, userId }) => {
 
-    const { userId } = route.params; // Get the userId from the route params
     const [searchQuery, setSearchQuery] = useState('');
     const [books, setBooks] = useState([]); // Initialize with an empty array
     const [items, setItems] = useState([]); // item list
@@ -94,7 +93,6 @@ const BookshelfScreen = ({ navigation, route }) => {
             }
             fetchUserBooks();
         }, [books, itemToDelete])
-        // }, [route.params?.userId])
     );
 
     const renderItem = ({ item }) => (

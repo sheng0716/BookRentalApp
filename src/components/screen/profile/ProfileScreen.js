@@ -4,8 +4,7 @@ import { Layout, Icon } from '@ui-kitten/components';
 import UserAvatar from 'react-native-user-avatar';
 import UsersDbService from '../../../assets/DbService/UsersDbService';
 
-const ProfileScreen = ({ navigation, route }) => {
-    const { userId } = route.params; // Get the userId from the route params
+const ProfileScreen = ({ navigation, route, userId }) => {
 
     const [isEditable, setIsEditable] = useState(false);
     const [userData, setUserData] = useState({

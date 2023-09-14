@@ -8,7 +8,7 @@ cursor = conn.cursor()
 cursor.execute('''
     UPDATE users
     SET isMember = 0
-    WHERE user_id = 1
+    WHERE user_id = 2
 ''')
 
 # Commit changes and close the connection

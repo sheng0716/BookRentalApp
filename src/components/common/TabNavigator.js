@@ -14,11 +14,18 @@ const TabNavigator = ({ route }) => {
     <Tab.Navigator screenOptions={{ headerShown: false }}
       tabBar={(props) => <BottomTabBar {...props} />}
       initialRouteName='HomeScreen'>
+
       <Tab.Screen name='HomeScreen'>
         {(props) => <HomeScreen {...props} userId={userId} />}
       </Tab.Screen>
-      <Tab.Screen name='BookshelfScreen' component={BookshelfScreen} />
-      <Tab.Screen name='ProfileScreen' component={ProfileScreen} />
+
+      <Tab.Screen name='BookshelfScreen'>
+        {(props) => <BookshelfScreen {...props} userId={userId} />}
+      </Tab.Screen>
+
+      <Tab.Screen name='ProfileScreen'>
+        {(props) => <ProfileScreen {...props} userId={userId} />}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 };
