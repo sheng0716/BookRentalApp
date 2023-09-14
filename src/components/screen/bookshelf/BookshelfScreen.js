@@ -74,9 +74,6 @@ const BookshelfScreen = ({ navigation, userId }) => {
         useCallback(() => {
             async function fetchUserBooks() {
                 try {
-                    // const userId = route.params?.userId; // pass the userId when navigating to this screen
-                    const userId = 1;
-
                     // Call the BookshelvesDbService to get the user's bookshelf
                     const userBookIds = await BookshelvesDbService.getBookshelfByUserId(userId);
 

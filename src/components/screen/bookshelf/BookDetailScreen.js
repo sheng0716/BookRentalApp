@@ -56,7 +56,6 @@ const BookDetailScreen = ({ navigation, route }) => {
 
     const addToBookshelfModal = async () => {
         try {
-            const userId = 1;
             const bookId = bookDetail.book_id;
 
             // Call the BookshelvesDbService to insert the record
@@ -123,7 +122,7 @@ const BookDetailScreen = ({ navigation, route }) => {
     const fetchUserData = async () => {
         try {
             const userData = await UsersDbService.getUserDataByUserId(userId);
-            console.log(userData.isMember)
+            console.log("Is member: " + userData.isMember)
             setIsMember(userData.isMember); // Update the state with the fetched user data
         } catch (error) {
             console.error('Error fetching user data:', error);
@@ -132,7 +131,6 @@ const BookDetailScreen = ({ navigation, route }) => {
 
     // Use useEffect to fetch user data when the component mounts
     useEffect(() => {
-
         fetchUserData();
 
         // Check if the book is in the user's bookshelf when the component mounts
